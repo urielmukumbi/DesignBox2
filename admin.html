@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#08215A">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>DesignBox | Administration</title>
+<style>
+:root{--navy:#08215A;--blue:#1D4FB8;--gold:#F2A900;--red:#B3202C;--paper:#F4F7FD;--ink:#0F1B3D;--line:#D5DEEF;--mute:#44527A;--ok:#0B7A3B}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Helvetica Neue',Arial,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;max-width:900px;margin:0 auto}
+.brand{font-weight:700;font-size:20px;letter-spacing:-.5px}.brand b{color:var(--gold)}.brand small{display:block;font-size:12px;font-weight:400;color:#C9D8F7;letter-spacing:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:6px;border:2px solid transparent;font-family:inherit;font-weight:700;font-size:15px;line-height:1.2;cursor:pointer;text-align:center;text-decoration:none}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.main{background:var(--navy);color:#fff}
+.btn.ghost{background:#fff;border-color:var(--navy);color:var(--navy)}
+.btn.danger{background:#fff;border-color:var(--red);color:var(--red)}
+.btn.sm{min-height:44px;padding:0 12px;font-size:14px}
+#status{margin:14px 0;padding:12px 14px;border-radius:6px;border-left:6px solid var(--ok);background:#EAF6EE;font-size:15px}
+#status.warn{border-color:var(--gold);background:#FFF6DD}
+#status.bad{border-color:var(--red);background:#FCE9EB}
+#status p{margin:0}#status p+p{margin-top:4px}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin-top:6px;overflow-x:auto}
+.tabs button{flex:none;min-height:46px;padding:0 16px;background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;font-family:inherit;font-weight:700;font-size:16px;color:var(--mute);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--navy);border-bottom-color:var(--gold)}
+.panel{padding:18px 0 80px}
+.panel h2{margin:0 0 4px;font-size:22px;letter-spacing:-.3px}
+.lead{margin:0 0 14px;color:var(--mute);max-width:60ch}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:14px}
+.tools label{flex:1 1 200px}
+label{display:grid;gap:6px;font-weight:600}
+input,select,textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid #5F739C;border-radius:6px;font-family:inherit;font-weight:400;font-size:16px;color:var(--ink);background:#fff}
+input[type=checkbox]{width:24px;height:24px;min-height:0;margin:0}
+.chk{display:flex;align-items:center;gap:10px;font-weight:600}
+.hint{font-weight:400;font-size:14px;color:var(--mute)}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.row{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px}
+.row.off{opacity:.7;background:#F1F3F8}
+.thumb{width:64px;aspect-ratio:3/4;border-radius:4px;overflow:hidden;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mute);text-align:center}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.info{min-width:0}
+.info .t{font-weight:700;overflow-wrap:anywhere}
+.info .m{color:var(--mute);font-size:14px}
+.badge{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;vertical-align:middle}
+.acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}
+.empty{background:#fff;border:1.5px dashed #8FA3CC;border-radius:8px;padding:22px;text-align:center;color:var(--mute)}
+dialog{border:0;padding:0;border-radius:10px;width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;background:#fff;color:var(--ink)}
+dialog::backdrop{background:rgba(8,33,90,.72)}
+.dw{display:grid;gap:14px;padding:18px}
+.dw h2{margin:0;font-size:22px}
+.dw p{margin:0}
+.err{margin:0;color:var(--red);font-weight:700;min-height:1.2em}
+.btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.imgbox{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.imgbox .thumb{width:120px}
+.imgside{flex:1 1 200px;display:grid;gap:8px}
+.steps{margin:0;padding-left:22px;display:grid;gap:6px}
+.note{font-size:14px;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);max-width:calc(100% - 32px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:8px;font-weight:600;z-index:20;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+#toast[hidden]{display:none}
+.safe{margin-top:26px;padding:14px;border:1.5px solid var(--line);border-radius:8px;background:#fff}
+.safe h3{margin:0 0 6px;font-size:17px}
+@media(min-width:640px){.row{grid-template-columns:64px 1fr auto}.acts{grid-column:auto;flex-direction:column;flex-wrap:nowrap}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="bar">
+ <div class="brand">Design<b>Box</b><small>Espace administration</small></div>
+ <button class="btn gold" id="btnPublish" type="button">Publier</button>
+</div></header>
+
+<div class="wrap">
+ <div id="status" role="status" aria-live="polite"></div>
+
+ <div class="tabs" role="tablist" aria-label="Sections">
+  <button role="tab" id="tab-products" aria-selected="true" aria-controls="panel-products" type="button">Modèles</button>
+  <button role="tab" id="tab-cats" aria-selected="false" aria-controls="panel-cats" type="button">Catégories</button>
+  <button role="tab" id="tab-settings" aria-selected="false" aria-controls="panel-settings" type="button">Réglages</button>
+ </div>
+
+ <section class="panel" id="panel-products" role="tabpanel" aria-labelledby="tab-products">
+  <h2>Modèles</h2>
+  <p class="lead">Ajoutez vos affiches, flyers, pages de garde, CV... Le filigrane est incrusté dans l’image avant son enregistrement. Votre fichier original n’est jamais conservé ni publié.</p>
+  <div class="tools">
+   <label>Catégorie<select id="pFilter"></select></label>
+   <button class="btn main" id="pAdd" type="button">Ajouter un modèle</button>
+  </div>
+  <ul class="list" id="pList"></ul>
+ </section>
+
+ <section class="panel" id="panel-cats" role="tabpanel" aria-labelledby="tab-cats" hidden>
+  <h2>Catégories</h2>
+  <p class="lead">Ajoutez, renommez, réordonnez ou supprimez. L’ordre ci-dessous est celui des boutons sur le site.</p>
+  <div class="tools"><button class="btn main" id="cAdd" type="button">Ajouter une catégorie</button></div>
+  <ul class="list" id="cList"></ul>
+ </section>
+
+ <section class="panel" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+  <h2>Réglages</h2>
+  <form id="sForm" class="dw" style="padding:0;max-width:480px" novalidate>
+   <label>Numéro WhatsApp (avec indicatif, sans +)
+    <input id="sWa" type="text" inputmode="numeric" autocomplete="off" maxlength="20">
+    <span class="hint">Exemple : 243971070509</span>
+   </label>
+   <label>Texte du filigrane
+    <input id="sWm" type="text" maxlength="24" autocomplete="off">
+    <span class="hint">S’applique aux prochaines images ajoutées. Les images déjà publiées ne changent pas.</span>
+   </label>
+   <p class="err" id="sErr" role="alert"></p>
+   <div><button class="btn main" type="submit">Enregistrer les réglages</button></div>
+  </form>
+  <div class="safe">
+   <h3>Connexion GitHub (publication en un clic)</h3>
+   <p class="note">À faire une seule fois sur chaque appareil. Ces informations restent dans ce navigateur et ne sont jamais écrites sur le site.</p>
+   <form id="gForm" class="dw" style="padding:0;margin-top:12px" novalidate>
+    <label>Nom d’utilisateur GitHub<input id="gOwner" type="text" maxlength="39" autocomplete="off" autocapitalize="none"></label>
+    <label>Nom du dépôt<input id="gRepo" type="text" maxlength="100" autocomplete="off" autocapitalize="none"></label>
+    <label>Branche<input id="gBranch" type="text" maxlength="100" autocomplete="off" autocapitalize="none" value="main"></label>
+    <label>Jeton d’accès (token)<input id="gToken" type="password" maxlength="255" autocomplete="off"><span class="hint">Un jeton à droits limités à ce seul dépôt. Ne le partagez jamais.</span></label>
+    <p class="err" id="gErr" role="alert"></p>
+    <div class="btns" style="justify-content:flex-start"><button class="btn main" type="submit">Enregistrer et tester</button><button class="btn danger" id="gForget" type="button">Effacer la connexion</button></div>
+   </form>
+  </div>
+  <div class="safe">
+   <h3>Sécurité de cette page</h3>
+   <p class="note">Cette page n’est liée à aucune page du site. Sans votre jeton GitHub, elle ne peut rien publier : n’importe qui peut l’ouvrir, mais personne ne peut modifier votre catalogue. Le jeton reste uniquement dans le navigateur de cet appareil : ne l’enregistrez pas sur un ordinateur partagé.</p>
+  </div>
+  <div class="safe">
+   <h3>Repartir de la version en ligne</h3>
+   <p class="note">Abandonne votre brouillon sur cet appareil et recharge le catalogue actuellement publié.</p>
+   <p style="margin-top:10px"><button class="btn danger" id="sReset" type="button">Abandonner mon brouillon</button></p>
+  </div>
+ </section>
+</div>
+
+<dialog id="pDlg" aria-labelledby="pdTitle">
+ <form class="dw" id="pForm" novalidate>
+  <h2 id="pdTitle">Modèle</h2>
+  <div>
+   <div class="imgbox">
+    <div class="thumb" id="pThumb">Aucune image</div>
+    <div class="imgside">
+     <label>Image du modèle
+      <input id="pFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <span class="hint">PNG, JPG ou WebP, 15 Mo maximum.</span>
+     </label>
+     <button class="btn ghost sm" id="pImgRemove" type="button">Retirer l’image</button>
+    </div>
+   </div>
+   <p class="note" id="pImgMsg" role="status" style="margin-top:8px"></p>
+  </div>
+  <label>Catégorie<select id="pCat"></select></label>
+  <label>Référence<input id="pRef" type="text" maxlength="20" autocomplete="off" autocapitalize="characters"><span class="hint">Lettres, chiffres et tirets. Exemple : AF-004</span></label>
+  <label>Titre<input id="pTitle" type="text" maxlength="80" autocomplete="off"></label>
+  <label>Prix en CDF<input id="pPrice" type="text" inputmode="numeric" autocomplete="off" placeholder="Exemple : 3000"></label>
+  <label class="chk"><input id="pVisible" type="checkbox"> Visible par les clients</label>
+  <p class="err" id="pErr" role="alert"></p>
+  <div class="btns">
+   <button class="btn ghost" id="pCancel" type="button">Annuler</button>
+   <button class="btn main" id="pSave" type="submit">Enregistrer</button>
+  </div>
+ </form>
+</dialog>
+
+<dialog id="cDlg" aria-labelledby="cdTitle">
+ <form class="dw" id="cForm" novalidate>
+  <h2 id="cdTitle">Catégorie</h2>
+  <label>Nom<input id="cName" type="text" maxlength="40" autocomplete="off"></label>
+  <label>Préfixe des références<input id="cPrefix" type="text" maxlength="4" autocomplete="off" autocapitalize="characters"><span class="hint">1 à 4 lettres. Exemple : AF donne AF-001, AF-002...</span></label>
+  <p class="err" id="cErr" role="alert"></p>
+  <div class="btns">
+   <button class="btn ghost" id="cCancel" type="button">Annuler</button>
+   <button class="btn main" type="submit">Enregistrer</button>
+  </div>
+ </form>
+</dialog>
+
+<dialog id="mvDlg" aria-labelledby="mvTitle">
+ <div class="dw">
+  <h2 id="mvTitle">Supprimer la catégorie</h2>
+  <p id="mvMsg"></p>
+  <label>Déplacer ces modèles vers<select id="mvTo"></select></label>
+  <div class="btns">
+   <button class="btn ghost" id="mvNo" type="button">Annuler</button>
+   <button class="btn danger" id="mvOk" type="button">Déplacer et supprimer</button>
+  </div>
+ </div>
+</dialog>
+
+<dialog id="askDlg" aria-labelledby="aTitle">
+ <div class="dw">
+  <h2 id="aTitle"></h2>
+  <p id="aMsg"></p>
+  <div class="btns">
+   <button class="btn ghost" id="aNo" type="button">Annuler</button>
+   <button class="btn main" id="aOk" type="button">Confirmer</button>
+  </div>
+ </div>
+</dialog>
+
+<dialog id="pubDlg" aria-labelledby="pubTitle">
+ <div class="dw">
+  <h2 id="pubTitle">Publier sur le site</h2>
+  <p id="pubInfo"></p>
+  <p class="note">Vos modèles et images sont envoyés sur GitHub. Le site se met à jour tout seul en une à deux minutes.</p>
+  <p class="note" id="pubMsg" role="status"></p>
+  <p class="err" id="pubErr" role="alert"></p>
+  <div class="btns">
+   <button class="btn ghost" id="pubZip" type="button">Télécharger à la place (zip)</button>
+   <button class="btn ghost" id="pubClose" type="button">Fermer</button>
+   <button class="btn main" id="pubGh" type="button">Publier sur le site</button>
+  </div>
+ </div>
+</dialog>
+
+<div id="toast" role="status" hidden></div>
+
+<script>document.write('<script src="catalogue.js?t=' + Date.now() + '"><\/script>');</script>
+<script>
+"use strict";
+/* ---------- Utilitaires ---------- */
+const $ = s => document.querySelector(s);
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+const fmt = n => new Intl.NumberFormat("fr-FR").format(n) + " CDF";
+const slug = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+function defaultPrefix(name) {
+  const w = slug(name).split("-").filter(Boolean);
+  const p = w.length > 1 ? w[0][0] + w[1][0] : (w[0] || "xx").slice(0, 2);
+  return p.toUpperCase().replace(/[^A-Z]/g, "") || "XX";
+}
+let toastT = 0;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3800); }
+function ask(title, msg, ok) {
+  return new Promise(res => {
+    const d = $("#askDlg"); $("#aTitle").textContent = title; $("#aMsg").textContent = msg; $("#aOk").textContent = ok || "Confirmer";
+    d.returnValue = "";
+    const done = () => { d.removeEventListener("close", done); res(d.returnValue === "ok"); };
+    d.addEventListener("close", done); d.showModal();
+  });
+}
+$("#aOk").addEventListener("click", () => $("#askDlg").close("ok"));
+$("#aNo").addEventListener("click", () => $("#askDlg").close("no"));
+
+/* ---------- Données ---------- */
+const REF_RE = /^[A-Za-z0-9-]{2,20}$/;
+let state, siteSig = "", pubSig = "", persistOK = true;
+const siteLoaded = !!window.CATALOGUE;
+
+function normalize(d) {
+  d = d && typeof d === "object" ? d : {};
+  const st = d.settings && typeof d.settings === "object" ? d.settings : {};
+  const out = { settings: { whatsapp: String(st.whatsapp || "").replace(/\D/g, ""), watermark: String(st.watermark || "DesignBox").slice(0, 24) || "DesignBox" }, categories: [], products: [] };
+  const ids = new Set(), refs = new Set();
+  (Array.isArray(d.categories) ? d.categories : []).forEach(c => {
+    if (!c || typeof c.id !== "string" || typeof c.name !== "string" || ids.has(c.id)) return;
+    ids.add(c.id);
+    out.categories.push({ id: c.id, name: c.name, prefix: String(c.prefix || defaultPrefix(c.name)).toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4) || "XX" });
+  });
+  (Array.isArray(d.products) ? d.products : []).forEach(p => {
+    if (!p || typeof p.ref !== "string" || refs.has(p.ref)) return;
+    refs.add(p.ref);
+    const o = { ref: p.ref, cat: String(p.cat || ""), title: String(p.title || ""), price: Math.max(0, Math.round(Number(p.price) || 0)), image: String(p.image || ""), wm: !!p.wm, hidden: !!p.hidden };
+    if (typeof p.imageData === "string" && p.imageData.indexOf("data:image/") === 0) o.imageData = p.imageData;
+    if (o.imageData && p.pub) o.pub = true;
+    out.products.push(o);
+  });
+  return out;
+}
+/* Version publiable : sans les données d'image, avec le chemin final images/REF.jpg */
+function serialize(st) {
+  return {
+    version: 1,
+    settings: { whatsapp: st.settings.whatsapp, watermark: st.settings.watermark },
+    categories: st.categories.map(c => ({ id: c.id, name: c.name, prefix: c.prefix })),
+    products: st.products.map(p => ({ ref: p.ref, cat: p.cat, title: p.title, price: p.price, image: p.imageData && !p.pub ? "images/" + p.ref + ".jpg" : p.image, wm: p.imageData && !p.pub ? true : p.wm, hidden: p.hidden }))
+  };
+}
+const isDirty = () => { const cur = JSON.stringify(serialize(state)); return cur !== siteSig && cur !== pubSig; };
+const catName = id => (state.categories.find(c => c.id === id) || { name: "Sans catégorie" }).name;
+const imgSrc = p => p.imageData || (p.image ? encodeURI(p.image) : "");
+
+/* ---------- Sauvegarde du brouillon dans le navigateur (IndexedDB) ---------- */
+const IDB = {
+  db: null,
+  open() {
+    return new Promise((res, rej) => {
+      if (!window.indexedDB) return rej(new Error("indisponible"));
+      const r = indexedDB.open("designbox-admin", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("kv");
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error("bloqué"));
+    });
+  },
+  async tx(mode, fn) {
+    if (!this.db) this.db = await this.open();
+    return new Promise((res, rej) => {
+      const t = this.db.transaction("kv", mode), rq = fn(t.objectStore("kv"));
+      t.oncomplete = () => res(rq && rq.result); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+    });
+  },
+  get(k) { return this.tx("readonly", s => s.get(k)); },
+  set(k, v) { return this.tx("readwrite", s => s.put(v, k)); },
+  del(k) { return this.tx("readwrite", s => s.delete(k)); }
+};
+let saving = Promise.resolve();
+function commit() {
+  render();
+  saving = saving.then(async () => {
+    try { await IDB.set("draft", { state: state, pubSig: pubSig, at: Date.now() }); persistOK = true; } catch (e) { persistOK = false; }
+    renderStatus();
+  });
+}
+
+/* ---------- Affichage ---------- */
+function renderStatus() {
+  const s = $("#status"); s.replaceChildren(); s.className = "";
+  const add = t => s.appendChild(el("p", null, t));
+  if (!siteLoaded) {
+    s.className = "bad";
+    add("catalogue.js est introuvable. Placez admin.html dans le même dossier que index.html. Sans cela, vous partez d’un catalogue vide et publier remplacerait tout.");
+  } else if (isDirty()) {
+    s.className = "warn";
+    const n = state.products.filter(p => p.imageData && !p.pub).length;
+    add("Modifications non publiées" + (n ? " (dont " + n + " image" + (n > 1 ? "s" : "") + " à envoyer)" : "") + ". Appuyez sur « Publier » pour les mettre en ligne.");
+  } else if (JSON.stringify(serialize(state)) !== siteSig) add("Publié. Le site se met à jour dans environ une à deux minutes.");
+  else add("Votre brouillon correspond à la version en ligne.");
+  if (!persistOK) {
+    if (!s.className) s.className = "warn";
+    add("La sauvegarde automatique est indisponible dans ce navigateur. Publiez avant de fermer la page.");
+  }
+}
+function fillCatSelect(sel, withAll, keep) {
+  const v = keep === undefined ? sel.value : keep;
+  sel.replaceChildren();
+  if (withAll) { const o = el("option", null, "Toutes les catégories"); o.value = "all"; sel.appendChild(o); }
+  state.categories.forEach(c => { const o = el("option", null, c.name); o.value = c.id; sel.appendChild(o); });
+  sel.value = [...sel.options].some(o => o.value === v) ? v : (withAll ? "all" : (sel.options[0] ? sel.options[0].value : ""));
+}
+function makeThumb(p) {
+  const t = el("div", "thumb"), src = p ? imgSrc(p) : "";
+  if (src) { const i = el("img"); i.src = src; i.alt = ""; i.loading = "lazy"; t.appendChild(i); } else t.textContent = "Aucune image";
+  return t;
+}
+function renderProducts() {
+  fillCatSelect($("#pFilter"), true);
+  const f = $("#pFilter").value, ul = $("#pList"); ul.replaceChildren();
+  const list = state.products.filter(p => f === "all" || p.cat === f);
+  if (!list.length) {
+    const e = el("li", "empty", state.products.length ? "Aucun modèle dans cette catégorie." : "Aucun modèle pour l’instant. Appuyez sur « Ajouter un modèle ».");
+    ul.appendChild(e); return;
+  }
+  list.forEach(p => {
+    const li = el("li", "row" + (p.hidden ? " off" : ""));
+    li.appendChild(makeThumb(p));
+    const info = el("div", "info"), t = el("div", "t", p.ref + " · " + p.title);
+    if (p.hidden) t.appendChild(el("span", "badge", "Masqué"));
+    info.appendChild(t); info.appendChild(el("div", "m", catName(p.cat) + " · " + fmt(p.price) + (imgSrc(p) ? "" : " · sans image")));
+    li.appendChild(info);
+    const acts = el("div", "acts");
+    const bEdit = el("button", "btn ghost sm", "Modifier"); bEdit.type = "button"; bEdit.addEventListener("click", () => openProduct(p));
+    const bVis = el("button", "btn ghost sm", p.hidden ? "Afficher" : "Masquer"); bVis.type = "button";
+    bVis.addEventListener("click", () => { p.hidden = !p.hidden; commit(); toast(p.hidden ? "Modèle masqué pour les clients." : "Modèle visible par les clients."); });
+    const bDel = el("button", "btn danger sm", "Supprimer"); bDel.type = "button"; bDel.addEventListener("click", () => deleteProduct(p));
+    [bEdit, bVis, bDel].forEach(b => { b.setAttribute("aria-label", b.textContent + " " + p.ref); acts.appendChild(b); });
+    li.appendChild(acts); ul.appendChild(li);
+  });
+}
+function renderCats() {
+  const ul = $("#cList"); ul.replaceChildren();
+  if (!state.categories.length) { ul.appendChild(el("li", "empty", "Aucune catégorie. Appuyez sur « Ajouter une catégorie ».")); return; }
+  state.categories.forEach((c, i) => {
+    const n = state.products.filter(p => p.cat === c.id).length;
+    const li = el("li", "row"); li.style.gridTemplateColumns = "1fr";
+    const info = el("div", "info"); info.appendChild(el("div", "t", c.name));
+    info.appendChild(el("div", "m", "Préfixe " + c.prefix + " · " + n + (n > 1 ? " modèles" : " modèle")));
+    li.appendChild(info);
+    const acts = el("div", "acts"); acts.style.flexDirection = "row"; acts.style.flexWrap = "wrap";
+    const mk = (label, cls, fn, dis) => { const b = el("button", "btn " + cls + " sm", label); b.type = "button"; b.disabled = !!dis; b.setAttribute("aria-label", label + " : " + c.name); b.addEventListener("click", fn); acts.appendChild(b); };
+    mk("Monter", "ghost", () => moveCat(i, -1), i === 0);
+    mk("Descendre", "ghost", () => moveCat(i, 1), i === state.categories.length - 1);
+    mk("Modifier", "ghost", () => openCat(c));
+    mk("Supprimer", "danger", () => deleteCategory(c));
+    li.appendChild(acts); ul.appendChild(li);
+  });
+}
+function renderSettings() {
+  $("#sWa").value = state.settings.whatsapp; $("#sWm").value = state.settings.watermark; $("#sErr").textContent = "";
+  const g = ghGet(); $("#gOwner").value = g ? g.owner : ""; $("#gRepo").value = g ? g.repo : ""; $("#gBranch").value = g ? g.branch : "main"; $("#gToken").value = g ? g.token : ""; $("#gErr").textContent = "";
+}
+function render() { renderStatus(); renderProducts(); renderCats(); }
+
+/* ---------- Onglets ---------- */
+function switchTab(name) {
+  ["products", "cats", "settings"].forEach(n => {
+    $("#tab-" + n).setAttribute("aria-selected", String(n === name));
+    $("#panel-" + n).hidden = n !== name;
+  });
+}
+["products", "cats", "settings"].forEach(n => $("#tab-" + n).addEventListener("click", () => switchTab(n)));
+$("#pFilter").addEventListener("change", renderProducts);
+
+/* ---------- Image : redimensionnement + filigrane incrusté dans les pixels ---------- */
+async function loadBitmap(file) {
+  if (window.createImageBitmap) { try { return await createImageBitmap(file, { imageOrientation: "from-image" }); } catch (e) {} }
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), i = new Image();
+    i.onload = () => { URL.revokeObjectURL(u); res(i); };
+    i.onerror = () => { URL.revokeObjectURL(u); rej(new Error("illisible")); };
+    i.src = u;
+  });
+}
+function drawWatermark(ctx, w, h, text) {
+  const fs = Math.max(14, Math.round(w * 0.075));
+  ctx.save();
+  ctx.font = "700 " + fs + "px Arial, Helvetica, sans-serif"; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+  const tw = ctx.measureText(text).width, sx = tw * 1.7, sy = fs * 3.2, diag = Math.hypot(w, h);
+  ctx.translate(w / 2, h / 2); ctx.rotate(-24 * Math.PI / 180);
+  ctx.lineWidth = Math.max(1, fs / 22); ctx.lineJoin = "round";
+  let row = 0;
+  for (let y = -diag / 2; y < diag / 2; y += sy, row++) {
+    const off = (row % 2) * sx / 2;
+    for (let x = -diag / 2 - off; x < diag / 2; x += sx) {
+      ctx.strokeStyle = "rgba(8,33,90,.40)"; ctx.strokeText(text, x, y);
+      ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.fillText(text, x, y);
+    }
+  }
+  ctx.restore();
+}
+async function stampImage(file, text) {
+  const bmp = await loadBitmap(file), sw = bmp.width, sh = bmp.height;
+  if (!sw || !sh) throw new Error("vide");
+  const k = Math.min(1, 900 / sw, 1200 / sh), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+  ctx.imageSmoothingQuality = "high"; ctx.drawImage(bmp, 0, 0, w, h);
+  if (bmp.close) bmp.close();
+  drawWatermark(ctx, w, h, text || "DesignBox");
+  const data = c.toDataURL("image/jpeg", 0.82);
+  if (data.indexOf("data:image/jpeg") !== 0) throw new Error("export");
+  return data;
+}
+
+/* ---------- Modèles : ajout / modification / suppression ---------- */
+let editing = null, busy = false;
+const pDlg = $("#pDlg");
+function nextRef(prefix) {
+  let max = 0; const re = new RegExp("^" + prefix + "-(\\d+)$");
+  state.products.forEach(p => { const m = re.exec(p.ref); if (m) max = Math.max(max, parseInt(m[1], 10)); });
+  let n = max + 1, ref;
+  do { ref = prefix + "-" + String(n).padStart(3, "0"); n++; } while (state.products.some(p => p.ref === ref));
+  return ref;
+}
+function showPreview() {
+  const t = $("#pThumb"); t.replaceChildren();
+  const src = imgSrc(editing.work);
+  if (src) { const i = el("img"); i.src = src; i.alt = "Aperçu du modèle"; t.appendChild(i); } else t.textContent = "Aucune image";
+  $("#pImgRemove").hidden = !src;
+}
+function openProduct(p) {
+  if (!state.categories.length) { toast("Créez d’abord une catégorie."); switchTab("cats"); return; }
+  const f = $("#pFilter").value;
+  const cat = p ? p.cat : (state.categories.some(c => c.id === f) ? f : state.categories[0].id);
+  editing = { orig: p || null, work: p ? { ...p } : { ref: "", cat, title: "", price: "", image: "", wm: false, hidden: false }, refTouched: !!p };
+  fillCatSelect($("#pCat"), false, cat);
+  if (p && !state.categories.some(c => c.id === p.cat)) { const o = el("option", null, "Sans catégorie"); o.value = ""; $("#pCat").insertBefore(o, $("#pCat").firstChild); $("#pCat").value = ""; }
+  $("#pdTitle").textContent = p ? "Modifier " + p.ref : "Ajouter un modèle";
+  $("#pRef").value = p ? p.ref : nextRef(state.categories.find(c => c.id === cat).prefix);
+  $("#pTitle").value = editing.work.title; $("#pPrice").value = p ? String(p.price) : "";
+  $("#pVisible").checked = !editing.work.hidden;
+  $("#pErr").textContent = ""; $("#pFile").value = ""; $("#pImgMsg").textContent = p && imgSrc(p) ? "Choisissez une nouvelle image pour remplacer l’actuelle." : "";
+  busy = false; $("#pSave").disabled = false; showPreview();
+  pDlg.showModal();
+}
+$("#pAdd").addEventListener("click", () => openProduct(null));
+$("#pCat").addEventListener("change", () => {
+  if (editing && !editing.refTouched) { const c = state.categories.find(x => x.id === $("#pCat").value); if (c) $("#pRef").value = nextRef(c.prefix); }
+});
+$("#pRef").addEventListener("input", () => { if (editing) editing.refTouched = true; });
+$("#pCancel").addEventListener("click", () => pDlg.close());
+pDlg.addEventListener("close", () => { editing = null; });
+$("#pImgRemove").addEventListener("click", () => {
+  if (!editing) return;
+  editing.work.imageData = undefined; delete editing.work.imageData; editing.work.image = ""; editing.work.wm = false; editing.work.pub = false;
+  $("#pFile").value = ""; $("#pImgMsg").textContent = "Image retirée."; showPreview();
+});
+$("#pFile").addEventListener("change", async () => {
+  const input = $("#pFile"), f = input.files[0], msg = $("#pImgMsg"), err = $("#pErr"); err.textContent = "";
+  if (!f || !editing) return;
+  if (!/^image\/(png|jpeg|webp)$/.test(f.type)) { msg.textContent = ""; err.textContent = "Choisissez une image PNG, JPG ou WebP."; input.value = ""; return; }
+  if (f.size > 15 * 1024 * 1024) { msg.textContent = ""; err.textContent = "L’image dépasse 15 Mo. Choisissez-en une plus légère."; input.value = ""; return; }
+  const target = editing; busy = true; $("#pSave").disabled = true; msg.textContent = "Traitement de l’image…";
+  try {
+    const data = await stampImage(f, state.settings.watermark);
+    if (editing !== target) return;
+    target.work.imageData = data; target.work.wm = true; target.work.pub = false;
+    showPreview(); msg.textContent = "Filigrane « " + state.settings.watermark + " » incrusté dans l’image. Votre original n’est pas conservé.";
+  } catch (e) {
+    if (editing === target) { msg.textContent = ""; err.textContent = "Cette image est illisible. Essayez un autre fichier PNG, JPG ou WebP."; }
+  } finally {
+    input.value = ""; if (editing === target) { busy = false; $("#pSave").disabled = false; }
+  }
+});
+$("#pForm").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!editing || busy) return;
+  const err = $("#pErr"); err.textContent = "";
+  const ref = $("#pRef").value.trim().toUpperCase(), title = $("#pTitle").value.trim(), priceRaw = $("#pPrice").value.replace(/[\s\u00a0]/g, ""), cat = $("#pCat").value;
+  if (!cat || !state.categories.some(c => c.id === cat)) { err.textContent = "Choisissez une catégorie."; $("#pCat").focus(); return; }
+  if (!REF_RE.test(ref)) { err.textContent = "Référence invalide : 2 à 20 caractères, lettres, chiffres et tirets seulement."; $("#pRef").focus(); return; }
+  if (state.products.some(p => p.ref === ref && p !== editing.orig)) { err.textContent = "La référence " + ref + " existe déjà. Choisissez-en une autre."; $("#pRef").focus(); return; }
+  if (state.categories.some(c => c.id.toUpperCase() === ref)) { err.textContent = "Cette référence est réservée. Choisissez-en une autre."; $("#pRef").focus(); return; }
+  if (title.length < 3) { err.textContent = "Le titre doit contenir au moins 3 caractères."; $("#pTitle").focus(); return; }
+  if (!/^\d{1,8}$/.test(priceRaw) || parseInt(priceRaw, 10) < 1) { err.textContent = "Indiquez un prix en chiffres, supérieur à 0 (exemple : 3000)."; $("#pPrice").focus(); return; }
+  const w = editing.work;
+  const np = { ref, cat, title, price: parseInt(priceRaw, 10), image: w.image || "", wm: !!w.wm, hidden: !$("#pVisible").checked };
+  if (w.imageData) { np.imageData = w.imageData; if (w.pub) np.pub = true; }
+  if (editing.orig) state.products[state.products.indexOf(editing.orig)] = np; else state.products.unshift(np);
+  const noImg = !imgSrc(np);
+  pDlg.close(); commit();
+  toast(noImg ? "Modèle enregistré, sans image (cadre provisoire sur le site)." : "Modèle enregistré.");
+});
+async function deleteProduct(p) {
+  if (await ask("Supprimer ce modèle", p.ref + " · " + p.title + " sera retiré du catalogue. Pour seulement le cacher aux clients, utilisez « Masquer ».", "Supprimer")) {
+    state.products.splice(state.products.indexOf(p), 1); commit(); toast("Modèle supprimé.");
+  }
+}
+
+/* ---------- Catégories ---------- */
+const cDlg = $("#cDlg"); let editCat = null, prefixTouched = false;
+function openCat(c) {
+  editCat = c || null; prefixTouched = !!c;
+  $("#cdTitle").textContent = c ? "Modifier la catégorie" : "Ajouter une catégorie";
+  $("#cName").value = c ? c.name : ""; $("#cPrefix").value = c ? c.prefix : ""; $("#cErr").textContent = "";
+  cDlg.showModal();
+}
+$("#cAdd").addEventListener("click", () => openCat(null));
+$("#cCancel").addEventListener("click", () => cDlg.close());
+$("#cPrefix").addEventListener("input", () => { prefixTouched = true; });
+$("#cName").addEventListener("input", () => { if (!prefixTouched) $("#cPrefix").value = defaultPrefix($("#cName").value.trim() || "xx"); });
+function uniqueCatId(base) {
+  let id = base || "categorie", n = 2;
+  const taken = x => state.categories.some(c => c.id === x) || state.products.some(p => p.ref.toLowerCase() === x);
+  while (taken(id)) id = (base || "categorie") + "-" + n++;
+  return id;
+}
+$("#cForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const err = $("#cErr"); err.textContent = "";
+  const name = $("#cName").value.trim().replace(/\s+/g, " "), prefix = $("#cPrefix").value.trim().toUpperCase();
+  if (name.length < 2) { err.textContent = "Le nom doit contenir au moins 2 caractères."; $("#cName").focus(); return; }
+  if (state.categories.some(c => c !== editCat && c.name.toLowerCase() === name.toLowerCase())) { err.textContent = "Une catégorie porte déjà ce nom."; $("#cName").focus(); return; }
+  if (!/^[A-Z]{1,4}$/.test(prefix)) { err.textContent = "Le préfixe doit contenir de 1 à 4 lettres (A à Z)."; $("#cPrefix").focus(); return; }
+  if (editCat) { editCat.name = name; editCat.prefix = prefix; }
+  else state.categories.push({ id: uniqueCatId(slug(name)), name, prefix });
+  const wasEdit = !!editCat; cDlg.close(); commit(); toast(wasEdit ? "Catégorie modifiée." : "Catégorie ajoutée.");
+});
+function moveCat(i, d) {
+  const j = i + d; if (j < 0 || j >= state.categories.length) return;
+  const a = state.categories; [a[i], a[j]] = [a[j], a[i]]; commit();
+}
+let pendingDel = null; const mvDlg = $("#mvDlg");
+async function deleteCategory(c) {
+  const n = state.products.filter(p => p.cat === c.id).length, others = state.categories.filter(x => x !== c);
+  if (!n) {
+    if (await ask("Supprimer la catégorie", "« " + c.name + " » sera supprimée.", "Supprimer")) { state.categories.splice(state.categories.indexOf(c), 1); commit(); toast("Catégorie supprimée."); }
+    return;
+  }
+  if (!others.length) { toast("Cette catégorie contient des modèles. Créez d’abord une autre catégorie pour les y déplacer."); return; }
+  pendingDel = c;
+  $("#mvMsg").textContent = "« " + c.name + " » contient " + n + (n > 1 ? " modèles." : " modèle.") + " Ils ne seront pas supprimés.";
+  const sel = $("#mvTo"); sel.replaceChildren();
+  others.forEach(o => { const op = el("option", null, o.name); op.value = o.id; sel.appendChild(op); });
+  mvDlg.showModal();
+}
+$("#mvNo").addEventListener("click", () => mvDlg.close());
+mvDlg.addEventListener("close", () => { pendingDel = null; });
+$("#mvOk").addEventListener("click", () => {
+  const c = pendingDel, to = $("#mvTo").value; if (!c || !state.categories.some(x => x.id === to)) return;
+  state.products.forEach(p => { if (p.cat === c.id) p.cat = to; });
+  state.categories.splice(state.categories.indexOf(c), 1);
+  mvDlg.close(); commit(); toast("Catégorie supprimée, modèles déplacés.");
+});
+
+/* ---------- Réglages ---------- */
+$("#sForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const err = $("#sErr"); err.textContent = "";
+  let wa = $("#sWa").value.replace(/\D/g, ""); if (wa.indexOf("00") === 0) wa = wa.slice(2);
+  const wm = $("#sWm").value.trim();
+  if (wa.length < 8 || wa.length > 15) { err.textContent = "Numéro WhatsApp invalide : indiquez l’indicatif et le numéro (8 à 15 chiffres)."; $("#sWa").focus(); return; }
+  if (wm.length < 2) { err.textContent = "Le texte du filigrane doit contenir au moins 2 caractères."; $("#sWm").focus(); return; }
+  state.settings.whatsapp = wa; state.settings.watermark = wm;
+  $("#sWa").value = wa; commit(); toast("Réglages enregistrés.");
+});
+$("#sReset").addEventListener("click", async () => {
+  if (!(await ask("Abandonner le brouillon", "Tous vos changements non publiés sur cet appareil seront perdus. Le catalogue en ligne sera rechargé.", "Abandonner"))) return;
+  await saving;
+  try { await IDB.del("draft"); } catch (e) {}
+  state = normalize(window.CATALOGUE); pubSig = ""; renderSettings(); commit(); toast("Brouillon abandonné.");
+});
+
+/* ---------- Publication : catalogue.js + images dans un zip ---------- */
+const enc = s => new TextEncoder().encode(s);
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function dataUrlBytes(d) { const b = atob(d.slice(d.indexOf(",") + 1)), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+function makeZip(files) {
+  const now = new Date(), tm = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1), dt = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  const chunks = [], central = []; let offset = 0;
+  files.forEach(f => {
+    const name = enc(f.name), crc = crc32(f.data), size = f.data.length;
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+    lh.setUint16(10, tm, true); lh.setUint16(12, dt, true); lh.setUint32(14, crc, true); lh.setUint32(18, size, true); lh.setUint32(22, size, true);
+    lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+    chunks.push(new Uint8Array(lh.buffer), name, f.data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, tm, true); ch.setUint16(14, dt, true); ch.setUint32(16, crc, true); ch.setUint32(20, size, true); ch.setUint32(24, size, true);
+    ch.setUint16(28, name.length, true); ch.setUint32(42, offset, true);
+    central.push(new Uint8Array(ch.buffer), name);
+    offset += 30 + name.length + size;
+  });
+  const csize = central.reduce((s, c) => s + c.length, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, csize, true); end.setUint32(16, offset, true);
+  return new Blob([...chunks, ...central, new Uint8Array(end.buffer)], { type: "application/zip" });
+}
+function catalogueText() {
+  return "/* DesignBox - catalogue public.\n   Ce fichier est généré par admin.html (bouton « Publier »). Ne le modifiez pas à la main. */\nwindow.CATALOGUE = " + JSON.stringify(serialize(state), null, 1) + ";\n";
+}
+function download(name, blob) {
+  const u = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 5000);
+}
+const pubDlg = $("#pubDlg");
+$("#btnPublish").addEventListener("click", async () => {
+  if (!siteLoaded && !(await ask("Catalogue en ligne introuvable", "Publier maintenant remplacerait tout le catalogue du site par celui de cette page. Continuer seulement si c’est voulu.", "Continuer"))) return;
+  const n = state.products.filter(p => p.imageData && !p.pub).length;
+  $("#pubErr").textContent = ""; $("#pubMsg").textContent = "";
+  $("#pubInfo").textContent = isDirty() ? "La mise à jour contient vos changements" + (n ? " et " + n + " nouvelle" + (n > 1 ? "s" : "") + " image" + (n > 1 ? "s" : "") : "") + "." : "Aucun changement par rapport à la version en ligne.";
+  pubDlg.showModal();
+});
+$("#pubClose").addEventListener("click", () => pubDlg.close());
+$("#pubZip").addEventListener("click", () => {
+  try {
+    const files = [{ name: "catalogue.js", data: enc(catalogueText()) }];
+    state.products.forEach(p => { if (p.imageData && !p.pub) files.push({ name: "images/" + p.ref + ".jpg", data: dataUrlBytes(p.imageData) }); });
+    const d = new Date(), stamp = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    download("designbox-mise-a-jour-" + stamp + ".zip", makeZip(files));
+  } catch (e) { $("#pubErr").textContent = "Impossible de préparer le fichier. Rechargez la page et réessayez."; }
+});
+
+/* ---------- Publication directe sur GitHub (API officielle) ---------- */
+const GH_KEY = "designbox_github_v1";
+function ghGet() {
+  try { const c = JSON.parse(localStorage.getItem(GH_KEY) || "null"); if (c && c.owner && c.repo && c.token) return { owner: c.owner, repo: c.repo, branch: c.branch || "main", token: c.token }; } catch (e) {}
+  return null;
+}
+function ghSave(c) { try { localStorage.setItem(GH_KEY, JSON.stringify(c)); return true; } catch (e) { return false; } }
+function ghForget() { try { localStorage.removeItem(GH_KEY); } catch (e) {} }
+function ghCall(c, method, path, body) {
+  const h = { "Authorization": "Bearer " + c.token, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  if (body) h["Content-Type"] = "application/json";
+  return fetch("https://api.github.com" + path, { method, headers: h, body: body ? JSON.stringify(body) : undefined, cache: "no-store" });
+}
+function ghMessage(status) {
+  if (status === 401) return "Jeton refusé ou expiré. Créez un nouveau jeton et enregistrez-le dans Réglages.";
+  if (status === 403) return "Accès refusé. Le jeton doit avoir la permission « Contents » en lecture et écriture sur ce dépôt (ou trop de tentatives : réessayez dans quelques minutes).";
+  if (status === 404) return "Dépôt, branche ou accès introuvable. Vérifiez le nom d’utilisateur, le nom du dépôt, la branche et le jeton.";
+  if (status === 409 || status === 422) return "Conflit pendant l’envoi. Appuyez de nouveau sur « Publier ».";
+  return "Erreur GitHub (code " + status + "). Réessayez dans un instant.";
+}
+function b64(u8) { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+async function ghPutFile(c, path, contentB64, message) {
+  const url = "/repos/" + encodeURIComponent(c.owner) + "/" + encodeURIComponent(c.repo) + "/contents/" + path.split("/").map(encodeURIComponent).join("/");
+  let sha;
+  const g = await ghCall(c, "GET", url + "?ref=" + encodeURIComponent(c.branch));
+  if (g.status === 200) { const j = await g.json(); if (j && !Array.isArray(j) && j.sha) sha = j.sha; }
+  else if (g.status !== 404) throw new Error(ghMessage(g.status));
+  const body = { message: message, content: contentB64, branch: c.branch };
+  if (sha) body.sha = sha;
+  const r = await ghCall(c, "PUT", url, body);
+  if (!r.ok) throw new Error(ghMessage(r.status));
+}
+$("#gForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("#gErr"); err.textContent = "";
+  const c = { owner: $("#gOwner").value.trim(), repo: $("#gRepo").value.trim().replace(/\.git$/, ""), branch: $("#gBranch").value.trim() || "main", token: $("#gToken").value.trim() };
+  if (!/^[A-Za-z0-9-]{1,39}$/.test(c.owner)) { err.textContent = "Nom d’utilisateur GitHub invalide (lettres, chiffres et tirets)."; $("#gOwner").focus(); return; }
+  if (!/^[A-Za-z0-9._-]{1,100}$/.test(c.repo)) { err.textContent = "Nom de dépôt invalide (lettres, chiffres, points, tirets)."; $("#gRepo").focus(); return; }
+  if (!/^[A-Za-z0-9._\/-]{1,100}$/.test(c.branch)) { err.textContent = "Nom de branche invalide."; $("#gBranch").focus(); return; }
+  if (c.token.length < 20 || /\s/.test(c.token)) { err.textContent = "Collez le jeton complet, sans espace."; $("#gToken").focus(); return; }
+  err.textContent = "Test de la connexion…";
+  try {
+    const r = await ghCall(c, "GET", "/repos/" + encodeURIComponent(c.owner) + "/" + encodeURIComponent(c.repo));
+    if (!r.ok) { err.textContent = ghMessage(r.status); return; }
+    const j = await r.json();
+    if (j.permissions && j.permissions.push === false) { err.textContent = "Connexion réussie, mais ce jeton ne peut pas écrire dans le dépôt. Donnez-lui la permission « Contents » en lecture et écriture."; return; }
+    if (!ghSave(c)) { err.textContent = "Ce navigateur refuse d’enregistrer la connexion (navigation privée ?)."; return; }
+    err.textContent = ""; toast("Connexion GitHub enregistrée.");
+  } catch (x) { err.textContent = "Impossible de joindre GitHub. Vérifiez votre connexion internet."; }
+});
+$("#gForget").addEventListener("click", () => { ghForget(); renderSettings(); toast("Connexion GitHub effacée de cet appareil."); });
+$("#pubGh").addEventListener("click", async () => {
+  const err = $("#pubErr"), msg = $("#pubMsg"), c = ghGet(); err.textContent = ""; msg.textContent = "";
+  if (!c) { pubDlg.close(); toast("Connectez d’abord GitHub dans Réglages."); switchTab("settings"); return; }
+  const btns = [$("#pubGh"), $("#pubZip"), $("#pubClose")]; btns.forEach(b => { b.disabled = true; });
+  try {
+    const imgs = state.products.filter(p => p.imageData && !p.pub); let i = 0;
+    for (const p of imgs) {
+      i++; msg.textContent = "Envoi des images (" + i + "/" + imgs.length + ")…";
+      await ghPutFile(c, "images/" + p.ref + ".jpg", p.imageData.slice(p.imageData.indexOf(",") + 1), "Ajout de l’image " + p.ref);
+      p.image = "images/" + p.ref + ".jpg"; p.wm = true; p.pub = true;
+    }
+    msg.textContent = "Envoi du catalogue…";
+    await ghPutFile(c, "catalogue.js", b64(enc(catalogueText())), "Mise à jour du catalogue");
+    pubSig = JSON.stringify(serialize(state));
+    msg.textContent = "C’est publié. Le site se met à jour dans une à deux minutes : rechargez-le ensuite.";
+  } catch (x) {
+    msg.textContent = "";
+    err.textContent = x instanceof TypeError ? "Impossible de joindre GitHub. Vérifiez votre connexion internet, puis réessayez." : (x.message || "Échec de la publication. Réessayez.");
+  } finally { btns.forEach(b => { b.disabled = false; }); commit(); }
+});
+
+/* ---------- Démarrage ---------- */
+(async function init() {
+  const site = normalize(window.CATALOGUE);
+  siteSig = JSON.stringify(serialize(site));
+  state = site;
+  try {
+    const d = await IDB.get("draft");
+    if (d && d.state) {
+      const s = normalize(d.state);
+      if (s.categories.length || s.products.length || !siteLoaded) { state = s; pubSig = String(d.pubSig || ""); }
+    }
+  } catch (e) { persistOK = false; }
+  renderSettings(); render();
+  if (state !== site && isDirty()) toast("Brouillon récupéré sur cet appareil.");
+})();
+</script>
+</body>
+</html>

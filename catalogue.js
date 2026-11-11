@@ -55,6 +55,15 @@ window.CATALOGUE = {
  ],
  "products": [
   {
+   "ref": "PG-004",
+   "cat": "pages-de-garde",
+   "title": "Page de garde de Génie Logiciel. UPL",
+   "price": 8000,
+   "image": "images/PG-004.jpg",
+   "wm": true,
+   "hidden": false
+  },
+  {
    "ref": "PG-001",
    "cat": "pages-de-garde",
    "title": "Page de garde classique bleue",

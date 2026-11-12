@@ -13,14 +13,24 @@ window.CATALOGUE = {
    "prefix": "PG"
   },
   {
-   "id": "flyers",
-   "name": "Flyers",
-   "prefix": "FL"
+   "id": "services-bureautiques",
+   "name": "Services Bureautiques",
+   "prefix": "SB"
   },
   {
    "id": "affiches",
    "name": "Affiches",
    "prefix": "AF"
+  },
+  {
+   "id": "excel",
+   "name": "Bases Excel",
+   "prefix": "XL"
+  },
+  {
+   "id": "flyers",
+   "name": "Flyers",
+   "prefix": "FL"
   },
   {
    "id": "anniversaires",
@@ -33,11 +43,6 @@ window.CATALOGUE = {
    "prefix": "MA"
   },
   {
-   "id": "deuil",
-   "name": "Faire-part de deuil",
-   "prefix": "FD"
-  },
-  {
    "id": "entreprises",
    "name": "Entreprises",
    "prefix": "EN"
@@ -48,9 +53,9 @@ window.CATALOGUE = {
    "prefix": "CV"
   },
   {
-   "id": "excel",
-   "name": "Bases Excel",
-   "prefix": "XL"
+   "id": "deuil",
+   "name": "Faire-part de deuil",
+   "prefix": "FD"
   }
  ],
  "products": [
